@@ -7,14 +7,6 @@ steps:
     args: ['build', '-t', 'gcr.io/kunal-ica1/my-frontend', './frontend']
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'gcr.io/kunal-ica1/my-frontend']
-  - name: 'hashicorp/terraform:light'
-    entrypoint: 'sh'
-    args:
-      - '-c'
-      - |
-        cd terraform
-        terraform init
-        terraform apply -auto-approve -var="project_id=kunal-ica1" -var="region=us-central1" -var="zone=us-central1-a" -var="cluster_name=my-gke-cluster" -var="frontend_image=gcr.io/kunal-ica1/my-frontend:latest" -var="backend_image=gcr.io/kunal-ica1/my-backend:latest" -var="pg_host=34.133.181.58" -var="pg_database=postgres" -var="pg_user=postgres" -var="pg_password=Kunal"
   - name: 'gcr.io/cloud-builders/kubectl'
     args:
       - 'apply'
