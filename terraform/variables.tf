@@ -9,6 +9,11 @@ variable "region" {
   default     = "us-central1"
 }
 
+variable "cluster_name" {
+  description = "The name of the GKE cluster"
+  type        = string
+}
+
 variable "pg_password" {
   description = "The password for the PostgreSQL database."
   type        = string
