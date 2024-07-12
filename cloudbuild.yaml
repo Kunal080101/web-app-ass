@@ -3,7 +3,7 @@ steps:
     args:
       - 'auth'
       - 'activate-service-account'
-      - '--key-file=./my-key.json'
+      - '--key-file=./mykey.json'
   
   # Set the project
   - name: 'gcr.io/cloud-builders/gcloud'
