@@ -3,25 +3,20 @@ steps:
   - name: 'gcr.io/cloud-builders/gcloud'
     args: ['config', 'set', 'project', 'kunal-ica1']
 
-# Use inline script to check and create the cluster if it doesn't exist
+  # Create GKE cluster
   - name: 'gcr.io/cloud-builders/gcloud'
-    entrypoint: 'bash'
     args:
-      - '-c'
-      - |
-        CLUSTER_NAME="my-gke-cluster"
-        ZONE="us-central1-a"
-        PROJECT="kunal-ica1"
-        if gcloud container clusters describe $CLUSTER_NAME --zone $ZONE --project $PROJECT &>/dev/null; then
-            echo "Cluster $CLUSTER_NAME already exists. Using existing cluster."
-        else
-            echo "Cluster $CLUSTER_NAME does not exist. Creating cluster."
-            gcloud container clusters create $CLUSTER_NAME --zone $ZONE --num-nodes 3 --enable-ip-alias --no-enable-basic-auth --metadata=disable-legacy-endpoints=true --project $PROJECT
-        fi
-
-  # Get credentials for the existing cluster or newly created cluster
-  - name: 'gcr.io/cloud-builders/gcloud'
-    args: ['container', 'clusters', 'get-credentials', 'my-gke-cluster', '--zone', 'us-central1-a']
+      - 'container'
+      - 'clusters'
+      - 'create'
+      - 'my-gke-cluster'
+      - '--zone'
+      - 'us-central1-a'
+      - '--num-nodes'
+      - '3'
+      - '--enable-ip-alias'
+      - '--no-enable-basic-auth'
+      - '--metadata=disable-legacy-endpoints=true'
 
   # Get credentials for the cluster
   - name: 'gcr.io/cloud-builders/gcloud'
