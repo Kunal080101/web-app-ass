@@ -1,40 +1,74 @@
 steps:
+  # Authenticate to GCP
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: ['auth', 'activate-service-account', '--key-file=${_SERVICE_ACCOUNT_KEY_FILE}']
+  
+  # Set the project
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: ['config', 'set', 'project', 'kunal-ica1']
+
+  # Create GKE cluster
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      - 'container'
+      - 'clusters'
+      - 'create'
+      - 'my-gke-cluster'
+      - '--zone'
+      - 'us-central1-a'
+      - '--num-nodes'
+      - '3'
+      - '--enable-ip-alias'
+      - '--no-enable-basic-auth'
+      - '--metadata=disable-legacy-endpoints=true'
+
+  # Get credentials for the cluster
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: ['container', 'clusters', 'get-credentials', 'my-gke-cluster', '--zone', 'us-central1-a']
+
+  # Build and push backend Docker image
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'gcr.io/kunal-ica1/my-backend', './backend']
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'gcr.io/kunal-ica1/my-backend']
+
+  # Build and push frontend Docker image
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'gcr.io/kunal-ica1/my-frontend', './frontend']
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'gcr.io/kunal-ica1/my-frontend']
+
+  # Apply Kubernetes configurations
   - name: 'gcr.io/cloud-builders/kubectl'
-    args:
-      - 'apply'
-      - '-f'
-      - 'backend/backend-deployment.yaml'
-      - '-n'
-      - 'example-namespace'
+    args: ['apply', '-f', 'backend/backend-deployment.yaml']
   - name: 'gcr.io/cloud-builders/kubectl'
-    args:
-      - 'apply'
-      - '-f'
-      - 'backend/backend-service.yaml'
-      - '-n'
-      - 'example-namespace'
+    args: ['apply', '-f', 'backend/backend-service.yaml']
   - name: 'gcr.io/cloud-builders/kubectl'
-    args:
-      - 'apply'
-      - '-f'
-      - 'frontend/frontend-deployment.yaml'
-      - '-n'
-      - 'example-namespace'
+    args: ['apply', '-f', 'frontend/frontend-deployment.yaml']
   - name: 'gcr.io/cloud-builders/kubectl'
+    args: ['apply', '-f', 'frontend/frontend-service.yaml']
+
+  # Update Kubernetes deployments
+  - name: 'gcr.io/cloud-builders/kubectl'
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
     args:
-      - 'apply'
-      - '-f'
-      - 'frontend/frontend-service.yaml'
+      - 'set'
+      - 'image'
+      - 'deployment/backend-deployment'
+      - 'backend-container=gcr.io/kunal-ica1/my-backend:latest'
       - '-n'
-      - 'example-namespace'
+      - 'default'
+  - name: 'gcr.io/cloud-builders/kubectl'
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
+    args:
+      - 'set'
+      - 'image'
+      - 'deployment/frontend-deployment'
+      - 'frontend-container=gcr.io/kunal-ica1/my-frontend:latest'
+      - '-n'
+      - 'default'
 
 images:
   - 'gcr.io/kunal-ica1/my-backend'
