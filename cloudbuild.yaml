@@ -1,7 +1,9 @@
-steps:
-  # Authenticate to GCP
+steps: 
   - name: 'gcr.io/cloud-builders/gcloud'
-    args: ['auth', 'activate-service-account', '--key-file=${_SERVICE_ACCOUNT_KEY_FILE}']
+    args:
+      - 'auth'
+      - 'activate-service-account'
+      - '--key-file=./mykey.json'
   
   # Set the project
   - name: 'gcr.io/cloud-builders/gcloud'
