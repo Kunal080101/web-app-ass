@@ -3,6 +3,14 @@ steps:
   - name: 'gcr.io/cloud-builders/gcloud'
     args: ['config', 'set', 'project', 'kunal-ica1']
 
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "Running setup_cluster.sh"
+        ./setup_cluster.sh
+
   # Create GKE cluster
   - name: 'gcr.io/cloud-builders/gcloud'
     args:
