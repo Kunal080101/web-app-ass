@@ -3,7 +3,7 @@ steps:
     args:
       - 'auth'
       - 'activate-service-account'
-      - '--key-file=./mykey.json'
+      - '--key-file=./my-key.json'
   
   # Set the project
   - name: 'gcr.io/cloud-builders/gcloud'
@@ -78,3 +78,5 @@ images:
 
 options:
   logging: CLOUD_LOGGING_ONLY
+
+serviceAccount: 160356498800-compute@developer.gserviceaccount.com
