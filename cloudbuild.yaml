@@ -53,6 +53,7 @@ steps:
   # Update Kubernetes deployments
   - name: 'gcr.io/cloud-builders/kubectl'
     env:
+      - 'CLOUDSDK_CONTAINER_CLUSTER=my-gke-cluster'
       - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
     args:
       - 'set'
