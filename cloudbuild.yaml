@@ -2,21 +2,10 @@ steps:
   # Set the project
   - name: 'gcr.io/cloud-builders/gcloud'
     args: ['config', 'set', 'project', 'kunal-ica1']
-
-  # Create GKE cluster
+  # Run the setup script to create the cluster or get credentials if it already exists
   - name: 'gcr.io/cloud-builders/gcloud'
-    args:
-      - 'container'
-      - 'clusters'
-      - 'create'
-      - 'my-gke-cluster'
-      - '--zone'
-      - 'us-central1-a'
-      - '--num-nodes'
-      - '3'
-      - '--enable-ip-alias'
-      - '--no-enable-basic-auth'
-      - '--metadata=disable-legacy-endpoints=true'
+    entrypoint: 'bash'
+    args: ['./setup_cluster.sh']
 
   # Get credentials for the cluster
   - name: 'gcr.io/cloud-builders/gcloud'
