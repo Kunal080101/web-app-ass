@@ -13,7 +13,7 @@ spec:
         app: backend
     spec:
       containers:
-        - name: backend
+        - name: backend-container
           image: gcr.io/kunal-ica1/my-backend:latest
           ports:
             - containerPort: 5000
