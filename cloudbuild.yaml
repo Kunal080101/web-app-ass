@@ -20,17 +20,32 @@ steps:
     args: ['push', 'gcr.io/kunal-ica1/my-frontend']
 
 # Apply Kubernetes configurations
-  # Apply Kubernetes configurations
   - name: 'gcr.io/cloud-builders/kubectl'
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=my-gke-cluster'
     args: ['apply', '-f', 'backend/backend-deployment.yaml']
   - name: 'gcr.io/cloud-builders/kubectl'
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=my-gke-cluster'
     args: ['apply', '-f', 'backend/backend-service.yaml']
   - name: 'gcr.io/cloud-builders/kubectl'
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=my-gke-cluster'
     args: ['apply', '-f', 'frontend/frontend-deployment.yaml']
   - name: 'gcr.io/cloud-builders/kubectl'
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=my-gke-cluster'
     args: ['apply', '-f', 'frontend/frontend-service.yaml']
+
   # Update Kubernetes deployments
   - name: 'gcr.io/cloud-builders/kubectl'
+    env:
+      - 'CLOUDSDK_CONTAINER_CLUSTER=my-gke-cluster'
+      - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
     args:
       - 'set'
       - 'image'
@@ -39,7 +54,8 @@ steps:
       - '-n'
       - 'default'
   - name: 'gcr.io/cloud-builders/kubectl'
-
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
     args:
       - 'set'
       - 'image'
