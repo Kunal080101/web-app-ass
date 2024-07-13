@@ -7,10 +7,6 @@ steps:
     entrypoint: 'bash'
     args: ['./setup_cluster.sh']
 
-  # Get credentials for the cluster
-  - name: 'gcr.io/cloud-builders/gcloud'
-    args: ['container', 'clusters', 'get-credentials', 'my-gke-cluster', '--zone', 'us-central1-a']
-
   # Build and push backend Docker image
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'gcr.io/kunal-ica1/my-backend', './backend']
